@@ -28,3 +28,9 @@ def asym_c123(C_Y_beta_dot, mu_b, b, V, K_X, K_XZ, K_Z, C_Y_beta, C_L, C_Y_p, C_
     
     return C1, C2, C3
 
+# State-Space Matrices
+def SS_matrices(C1, C2, C3):
+    A = -1.0 * np.dot(np.linalg.inv(C1), C2)
+    B = -1.0 * np.dot(np.linalg.inv(C1), C3)
+    
+    return A, B

@@ -11,19 +11,20 @@ import Cit_par
 ####### BASE DATA #######
 
 
-# Old Symmetric EOM
-def sym_eom(muc,c,Vtas,CZa,Cmadot, KY2,CXu,CXa,CZ0,CXq,CZu,CX0,CZq,Cmu,Cma,Cmq,CXde,CZde, Cmd, CZadot ):
+# Symmetric EOMs Matrices
+def sym_c123(mu_c, c_bar, V, C_Z_alpha, C_m_a_dot, K_Y, C_X_u, C_X_alpha, C_Z_0, C_X_q, C_Z_u, C_X_0, C_Z_q, C_m_u, C_m_alpha, C_m_q, C_X_deltae, C_Z_deltae, C_m_deltae, C_Z_a ):
 
-    C1s = np.matrix([[-2.*muc*c/(Vtas**2), 0., 0., 0.],[ 0. ,(CZadot - 2.*muc)*(c/Vtas), 0., 0.],[0., 0. ,-(c/Vtas) ,0.],[ 0., Cmadot*(c/Vtas), 0., -2.*muc*KY2*((c**2)/(Vtas**2))]])
-    C2s = np.matrix([[CXu/Vtas, CXa, CZ0, CXq*(c/Vtas)],[ CZu/Vtas ,CZa ,-CX0 ,(CZq +2.*muc)*(c/Vtas)],[ 0., 0., 0. ,c/Vtas],[ Cmu/Vtas, Cma ,0. ,Cmq*(c/Vtas)]])
-    C3s = np.matrix([[CXde],[ CZde],[0.],[Cmd]])
+    C1 = np.matrix([[-2.0 * mu_c * c_bar / (V**2), 0.0, 0.0, 0.0], [ 0.0, (C_Z_a - 2.0 * mu_c) * (c_bar / V), 0.0, 0.0], [0.0, 0.0, -(c_bar / V), 0.0], [0.0, C_m_a_dot * (c_bar / V), 0.0, -2.0 * mu_c * (K_Y**2) * (c_bar**2 / V**2)]])
+    C2 = np.matrix([[C_X_u / V, C_X_alpha, C_Z_0, C_X_q * (c_bar / V)], [C_Z_u / V, C_Z_a, -C_X_0, (C_Z_q + 2.0 * mu_c) * (c_bar / V)], [0.0, 0.0, 0.0, c_bar / V], [C_m_u / V, C_m_a, 0.0, C_m_q * (c_bar / V)]])
+    C3 = np.matrix([[C_X_deltae], [C_Z_deltae], [0.0], [C_m_deltae]])
 
-    return C1s,C2s,C3s
+    return C1, C2, C3
 
-# Old Asymmetric EOM
-def asym_eom(CYbdot, mub, b,Vtas, KX2, KXZ, KZ2, CYb, CL, CYp,CYr, Clp, Clb, Clr, Cnb,Cnp, Cnr, CYda, CYdr, Clda, Cldr,Cnda, Cndr, Cnbdot):
-    C1a = np.matrix([[(CYbdot - 2.*mub)*(b/Vtas), 0., 0., 0. ],[ 0. ,(-b/(2.*Vtas)) ,0. ,0. ],[ 0. ,0. ,-2.*mub*KX2*(b**2/Vtas**2) ,2.*mub*KXZ*b**2/(Vtas**2)],[ Cnbdot*(b/Vtas), 0., 2.*mub*KXZ*(b**2/Vtas**2), -2.*mub*KZ2*(b**2/Vtas**2)]])
-    C2a = np.matrix([[CYb, CL, (CYp *b)/(2*Vtas), (CYr - 4*mub)*b/(2*Vtas) ],[0., 0., b/(2*Vtas), 0. ],[ Clb, 0. ,Clp*b/(2*Vtas), Clr*b/(2*Vtas) ],[ Cnb ,0., Cnp*b/(2*Vtas), Cnr*b/(2*Vtas)]])
-    C3a = np.matrix([[CYda, CYdr],[ 0., 0. ],[ Clda, Cldr],[ Cnda, Cndr]])
-    return C1a,C2a,C3a
+# Asymmetric EOMs Marices
+def asym_c123(C_Y_beta_dot, mu_b, b, V, K_X, K_XZ, K_Z, C_Y_beta, C_L, C_Y_p, C_Y_r, C_l_p, C_l_beta, C_l_r, C_n_beta, C_n_p, C_n_r, C_Y_delta_alpha, C_Y_deltar, C_l_delta_alpha, C_l_deltar, C_n_delta_alpha, C_n_deltar, C_n_beta_dot):
+    C1 = np.matrix([[(C_Y_beta_dot - 2.0 * mu_b) * (b / V), 0.0, 0.0, 0.0], [0.0, -(b / (2.0 * V)), 0.0, 0.0], [0.0, 0.0, -2.0 * mu_b * K_X**2 * (b**2 / V**2), 2.0 * mu_b * K_XZ * b**2 / (V**2)], [C_n_beta_dot * (b / V), 0.0, 2.0 * mu_b * K_XZ * (b**2 / V**2), -2.0 * mu_b * K_Z**2 * (b**2 / V**2)]])
+    C2 = np.matrix([[C_Y_beta, C_L, (C_Y_p * b) / (2.0 * V), (C_Y_r - 4.0 * mu_b) * b / (2.0 * V)], [0.0, 0.0, b / (2 * V), 0.0], [C_l_beta, 0.0, C_l_p * b / (2.0 * V), C_l_r * b / (2.0 * V)], [C_n_beta, 0.0, C_n_p * b / (2.0 * V), C_n_r * b / (2.0 * V)]])
+    C3 = np.matrix([[CYda, CYdr],[ 0., 0. ],[ Clda, Cldr],[ Cnda, Cndr]])
+    
+    return C1, C2, C3
 

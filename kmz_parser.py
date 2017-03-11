@@ -1,11 +1,12 @@
 import numpy as np
 from datetime import datetime
 import matplotlib.pyplot as plt
+import matplotlib.dates as md
 
 time1 = np.genfromtxt("time1.txt", dtype=None)
+time1_datetime = []
 for i in range(len(time1)):
-    # time1[i] = time1[i].strip("</when>")
-    time1[i] = datetime.strptime(time1[i], '<when>%Y-%m-%dT%H:%M:%SZ</when>')
+    time1_datetime.append(datetime.strptime(time1[i], '<when>%Y-%m-%dT%H:%M:%SZ</when>'))
 
 f = open("coord1.txt")
 data = f.readlines()
@@ -33,5 +34,9 @@ for i in range(len(data)):
 
 coord2 = np.genfromtxt(data)
 
-plt.plot(coord1[:, 0], coord1[:, 1])
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.plot_date(time1_datetime, coord1[:, 2], linestyle="solid", marker=None)
+xfmt = md.DateFormatter('%H:%M')
+ax.xaxis.set_major_formatter(xfmt)
 plt.show()

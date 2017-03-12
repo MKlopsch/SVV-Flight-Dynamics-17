@@ -3,13 +3,41 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import control.matlab as control
-
+import os
+from scipy.io import savemat
+import time
 
 ####### OWN PROGRAMS IMPORT #######
-import Cit_par
+# import Cit_par
 
 
 ####### BASE DATA #######
+
+# pressure altitude h_p in m
+# Mach number M
+# Fuel flow left engine Mf1 kg/s
+# Fuel flow right engine Mf2 kg/s
+# temperature difference between measured and ISA T_ISA = T0 + (lambda * h_p)   delta_T_ISA
+
+# Output in matlab.dat pressure altitude,  the Mach number,  the temperature difference,  the fuel flow of the left jet engine,  the fuel flow of the right jet engine
+# only spaces between in one line
+h_p = 1000
+M = 0.4
+delta_T_ISA = 1.0
+Mf1 = (680/2.0)/(60.0*60.0)
+Mf2 = (750/2.0)/(60.0*60.0)
+f = open("matlab.dat", "w")
+f.write(str(h_p) + " " + str(M) + " " + str(delta_T_ISA) + " " + str(Mf1) + " " + str(Mf2)) # + "\n")
+f.close()
+
+# run thrust.exe
+os.startfile("thrust.exe")
+
+# import thrust.dat
+time.sleep(2)
+thrust = np.genfromtxt("thrust.dat")
+
+
 
 
 # Symmetric EOMs Matrices

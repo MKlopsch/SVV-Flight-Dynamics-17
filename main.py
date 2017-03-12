@@ -2,10 +2,11 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-import Cit_par
+import control.matlab as control
 
 
 ####### OWN PROGRAMS IMPORT #######
+import Cit_par
 
 
 ####### BASE DATA #######
@@ -34,3 +35,28 @@ def SS_matrices(C1, C2, C3):
     B = -1.0 * np.dot(np.linalg.inv(C1), C3)
 
     return A, B
+
+
+# Compute C1, C2, C3 for sym and asym
+C1_sym, C2_sym, C3_sym = sym_c123(mu_c, c_bar, V, C_Z_alpha, C_m_a_dot, K_Y, C_X_u, C_X_alpha, C_Z_0, C_X_q, C_Z_u, C_X_0, C_Z_q, C_m_u, C_m_alpha, C_m_q, C_X_deltae, C_Z_deltae, C_m_deltae, C_Z_a)
+C1_asym, C2_asym, C3_asym = asym_c123(C_Y_beta_dot, mu_b, b, V, K_X, K_XZ, K_Z, C_Y_beta, C_L, C_Y_p, C_Y_r, C_l_p, C_l_beta, C_l_r, C_n_beta, C_n_p, C_n_r, C_Y_delta_alpha, C_Y_deltar, C_l_delta_alpha, C_l_deltar, C_n_delta_alpha, C_n_deltar, C_n_beta_dot)
+
+# Compute A and B for sym and asym
+A_sym, B_sym = SS_matrices(C1_sym, C2_sym, C3_sym)
+A_asym, B_asym = SS_matrices(C1_asym, C2_asym, C3_asym)
+
+# Compute the eigenvalues of A for sym and asym
+eigen_sym = np.linalg.eigenvals(A_sym)
+eigen_asym = np.linalg.eigenvals(A_asym)
+
+# Model response to inputs and disturbances
+sys_sym = control.ss(A_sym, B_sym, C_sym, D_sym)
+sys_asym = control.ss(A_asym, B_asym, C_asym, D_asym)
+
+# calculate the responses to an input by using forced_response in case of an arbitrary input signal,
+# step_response in case of a stepwise input,
+# impulse_response in case of a pulse shaped input,
+# and initial_response in case of zero input with an initial deflection from the equilibrium situation.
+
+
+### NOW DO ABOVE WITH DATA FROM FLIGHT AGAIN

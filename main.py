@@ -24,10 +24,10 @@ import time
 h_p = 1000
 M = 0.4
 delta_T_ISA = 1.0
-Mf1 = (680/2.0)/(60.0*60.0)
-Mf2 = (750/2.0)/(60.0*60.0)
+Mf1 = (680 / 2.0) / (60.0 * 60.0)
+Mf2 = (750 / 2.0) / (60.0 * 60.0)
 f = open("matlab.dat", "w")
-f.write(str(h_p) + " " + str(M) + " " + str(delta_T_ISA) + " " + str(Mf1) + " " + str(Mf2)) # + "\n")
+f.write(str(h_p) + " " + str(M) + " " + str(delta_T_ISA) + " " + str(Mf1) + " " + str(Mf2))  # + "\n")
 f.close()
 
 # run thrust.exe
@@ -36,8 +36,6 @@ os.startfile("thrust.exe")
 # import thrust.dat
 time.sleep(2)
 thrust = np.genfromtxt("thrust.dat")
-
-
 
 
 # Symmetric EOMs Matrices
@@ -61,31 +59,17 @@ def asym_c123(C_Y_beta_dot, mu_b, b, V, K_X, K_XZ, K_Z, C_Y_beta, C_L, C_Y_p, C_
 def SS_matrices(C1, C2, C3):
     A = -1.0 * np.dot(np.linalg.inv(C1), C2)
     B = -1.0 * np.dot(np.linalg.inv(C1), C3)
-    C = np.eye(4)
-    D = 0
-    
-    return A, B, C, D
 
-# State-Space Calculations
-def SS_calculations(A, B, C, D):
-    statespace = ss(A, B, C, D)
-    eigvals = np.linalg.eigvals(A)
-    natfreq = damp(statespace, doprint = False)[0]
-    dampval = damp(statespace, doprint = False)[1]
+    return A, B
 
-    # Time parameters
-    period = (2.*np.pi/natfreq)/np.sqrt(1.-dampval**2)
-    halfamp = np.log(0.5)/(eigvals.real)
-    
-    return statespace, eigvals, natfreq, dampval, period, halfamp
 
 # Compute C1, C2, C3 for sym and asym
 C1_sym, C2_sym, C3_sym = sym_c123(mu_c, c_bar, V, C_Z_alpha, C_m_a_dot, K_Y, C_X_u, C_X_alpha, C_Z_0, C_X_q, C_Z_u, C_X_0, C_Z_q, C_m_u, C_m_alpha, C_m_q, C_X_deltae, C_Z_deltae, C_m_deltae, C_Z_a)
 C1_asym, C2_asym, C3_asym = asym_c123(C_Y_beta_dot, mu_b, b, V, K_X, K_XZ, K_Z, C_Y_beta, C_L, C_Y_p, C_Y_r, C_l_p, C_l_beta, C_l_r, C_n_beta, C_n_p, C_n_r, C_Y_delta_alpha, C_Y_deltar, C_l_delta_alpha, C_l_deltar, C_n_delta_alpha, C_n_deltar, C_n_beta_dot)
 
 # Compute A and B for sym and asym
-A_sym, B_sym, C_sym, D_sym, = SS_matrices(C1_sym, C2_sym, C3_sym)
-A_asym, B_asym,C_asym, D_asym, = SS_matrices(C1_asym, C2_asym, C3_asym)
+A_sym, B_sym = SS_matrices(C1_sym, C2_sym, C3_sym)
+A_asym, B_asym = SS_matrices(C1_asym, C2_asym, C3_asym)
 
 # Compute the eigenvalues of A for sym and asym
 eigen_sym = np.linalg.eigenvals(A_sym)
